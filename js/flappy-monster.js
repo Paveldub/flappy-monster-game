@@ -21,6 +21,9 @@ function FlappyMonster(canvas) {
 	// Game State
 	game.currentState = initial;
 
+	// velocity
+	game.velocity = 5;
+
 	// Bind Events
 	game.bindEvents();
 
@@ -31,6 +34,10 @@ function FlappyMonster(canvas) {
 FlappyMonster.prototype.createObjects = function() {
 	// Base
 	let game = this;
+
+	game.background1 = new GameBackground('../images/back.png', game.canvas);
+	game.background2 = new GameBackground('../images/back.png', game.canvas);
+	game.background2.x = game.canvas.width;
 };
 
 FlappyMonster.prototype.bindEvents = function() {
@@ -111,23 +118,41 @@ FlappyMonster.prototype.drawInitialScreen = function() {
 	// Text
 	game.context.fillStyle = '#fff';
 	game.context.font = '36px Arial';
-	game.context.fillText('Click to start!', game.canvas.width / 2 - 100, game.canvas.height / 2);
+	game.context.fillText('Click to start!', game.canvas.width / 2 - 120, game.canvas.height / 2);
 };
 
 FlappyMonster.prototype.drawGamePlayingScreen = function() {
 	// Base
 	let game = this;
 
-	// Draw
+	// clear canvas
+	game.context.clearRect(0, 0, game.canvas.width, game.canvas.height);
 
-	// Background
-	game.context.fillStyle = '#000';
-	game.context.fillRect(0, 0, game.canvas.width, game.canvas.height);
+	// Draw bakground
+	game.animateBackground();
+};
 
-	// Text
-	game.context.fillStyle = '#fff';
-	game.context.font = '36px Arial';
-	game.context.fillText('Game playing', game.canvas.width / 2 - 100, game.canvas.height / 2);
+FlappyMonster.prototype.animateBackground = function() {
+	// Base
+	let game = this;
+
+	// bg 1
+	game.background1.draw();
+
+	if (Math.abs(game.background1.x) > game.canvas.width) {
+		game.background1.x = game.canvas.width - game.velocity;
+	}
+
+	game.background1.x = game.background1.x - game.velocity;
+
+	// bg 2
+	game.background2.draw();
+
+	if (Math.abs(game.background2.x) > game.canvas.width) {
+		game.background2.x = game.canvas.width - game.velocity;
+	}
+
+	game.background2.x = game.background2.x - game.velocity;
 };
 
 FlappyMonster.prototype.drawGameOverScreen = function() {
