@@ -22,5 +22,4 @@ GameScore.prototype.draw = function() {
 	gameScore.score = parseFloat((draw - gameScore.start) / 1000).toFixed(1);
 	gameScore.context.font = '45px Verdana';
 	gameScore.context.fillText(gameScore.score, gameScore.x, gameScore.y);
-	gameScore.context.fillStyle = 'red';
 };

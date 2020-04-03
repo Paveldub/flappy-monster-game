@@ -43,6 +43,10 @@ FlappyMonster.prototype.createObjects = function() {
 	game.gameScore = new GameScore(game.canvas);
 	game.gameScore.x = game.canvas.width - 130;
 	game.gameScore.y = 70;
+
+	// wall factory
+	game.wallFactory = new WallFactory(game.canvas);
+	game.wallFactory.generateWalls();
 };
 
 FlappyMonster.prototype.bindEvents = function() {
@@ -138,6 +142,39 @@ FlappyMonster.prototype.drawGamePlayingScreen = function() {
 
 	// draw score
 	game.gameScore.draw();
+
+	// draw walls
+	game.drawWalls();
+};
+
+FlappyMonster.prototype.drawWalls = function() {
+	// Base
+	let game = this;
+
+	// draw walls
+	let walls = game.wallFactory.walls;
+
+	for (let i = 0; i < walls.length; i++) {
+		walls[i].draw();
+		walls[i].x = walls[i].x - game.velocity;
+	}
+
+	game.removeExtraWalls();
+};
+
+FlappyMonster.prototype.removeExtraWalls = function() {
+	// Base
+	let game = this;
+
+	// draw walls
+	let walls = game.wallFactory.walls;
+
+	for (let i = 0; i < walls.length; i++) {
+		if (walls[i].x + walls[i].w < 0) {
+			// remove
+			walls.shift();
+		}
+	}
 };
 
 FlappyMonster.prototype.animateBackground = function() {
