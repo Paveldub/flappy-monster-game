@@ -75,11 +75,24 @@ FlappyMonster.prototype.bindEvents = function() {
 		switch (game.currentState) {
 			case gameOver:
 				if (event.keyCode === keyCodeBtn.R) {
+					game.reset();
 					game.currentState = gamePlaying;
 				}
 				break;
 		}
 	});
+};
+
+FlappyMonster.prototype.reset = function() {
+	// Base
+	let game = this;
+
+	// reset states
+	game.gameScore.start = new Date();
+	game.gameScore.score = 0;
+	game.wallFactory.walls = [];
+	game.monster.x = 115;
+	game.monster.y = 115;
 };
 
 FlappyMonster.prototype.start = function() {
@@ -151,6 +164,47 @@ FlappyMonster.prototype.drawGamePlayingScreen = function() {
 
 	// draw monster
 	game.monster.draw();
+
+	// collision check
+	game.checkCollisions();
+};
+
+FlappyMonster.prototype.checkCollisions = function() {
+	// Base
+	let game = this;
+
+	let walls = game.wallFactory.walls;
+
+	for (let i = 0; i < walls.length; i++) {
+		if (game.isCollded(game.monster, walls[i])) {
+			game.currentState = gameOver;
+		}
+	}
+};
+
+FlappyMonster.prototype.isCollded = function(monster, wall) {
+	// Base
+	let game = this;
+
+	let isCollided = true;
+
+	// Monster coords
+	let monsterTop = game.monster.y;
+	let monsterBottom = game.monster.y + game.monster.h;
+	let monsterLeft = game.monster.x;
+	let monsterRight = game.monster.x + game.monster.w;
+
+	// walls coords
+	let wallTop = wall.y + wall.h + wall.gap; // top of lower wall
+	let wallBottom = wall.y + wall.h; // bottom of bottom wall
+	let wallRight = wall.x + wall.w;
+	let wallLeft = wall.x;
+
+	if ((monsterBottom < wallTop && monsterTop > wallBottom) || monsterLeft > wallRight || monsterRight < wallLeft) {
+		isCollided = false;
+	}
+
+	return isCollided;
 };
 
 FlappyMonster.prototype.drawWalls = function() {
@@ -217,6 +271,14 @@ FlappyMonster.prototype.drawGameOverScreen = function() {
 	game.context.fillRect(0, 0, game.canvas.width, game.canvas.height);
 
 	// Text
+	game.context.fillStyle = '#fff';
+	game.context.font = '54px Arial';
+	game.context.fillText(
+		'Your score : ' + game.gameScore.score,
+		game.canvas.width / 2 - 180,
+		game.canvas.height / 2 - 100
+	);
+
 	game.context.fillStyle = '#fff';
 	game.context.font = '36px Arial';
 	game.context.fillText('Game Over :(', game.canvas.width / 2 - 100, game.canvas.height / 2);
