@@ -46,7 +46,6 @@ FlappyMonster.prototype.createObjects = function() {
 
 	// wall factory
 	game.wallFactory = new WallFactory(game.canvas);
-	game.wallFactory.generateWalls();
 
 	// monster
 	game.monster = new Monster('../images/monster.png', game.canvas);
@@ -62,6 +61,7 @@ FlappyMonster.prototype.bindEvents = function() {
 			case initial:
 				// draw initial screen
 				game.currentState = gamePlaying;
+				game.wallFactory.generateWalls();
 				break;
 			case gamePlaying:
 				// draw game play screen
