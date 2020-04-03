@@ -47,6 +47,9 @@ FlappyMonster.prototype.createObjects = function() {
 	// wall factory
 	game.wallFactory = new WallFactory(game.canvas);
 	game.wallFactory.generateWalls();
+
+	// monster
+	game.monster = new Monster('../images/monster.png', game.canvas);
 };
 
 FlappyMonster.prototype.bindEvents = function() {
@@ -62,7 +65,7 @@ FlappyMonster.prototype.bindEvents = function() {
 				break;
 			case gamePlaying:
 				// draw game play screen
-				game.currentState = gamePlaying;
+				game.monster.vy = -1 * game.velocity;
 				break;
 		}
 	});
@@ -145,6 +148,9 @@ FlappyMonster.prototype.drawGamePlayingScreen = function() {
 
 	// draw walls
 	game.drawWalls();
+
+	// draw monster
+	game.monster.draw();
 };
 
 FlappyMonster.prototype.drawWalls = function() {
